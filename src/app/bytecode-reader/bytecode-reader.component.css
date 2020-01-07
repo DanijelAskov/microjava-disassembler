@@ -1,0 +1,8 @@
+input[type="file"] {
+  display: none;
+}
+
+.file-name {
+  font-family: Consolas, 'Courier New', Courier, monospace;
+  text-align: center;
+}

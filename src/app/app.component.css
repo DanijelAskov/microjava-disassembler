@@ -1,0 +1,17 @@
+div {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.container {
+  margin-top: 30px;
+}
+
+code {
+  font-family: Consolas, 'Courier New', Courier, monospace;
+  color: black;
+}
+
+.blue-colored {
+  color: darkblue;
+}

@@ -1,0 +1,11 @@
+<div class="col-12">
+  <div class="input-group">
+    <input type="text" class="form-control file-name" [placeholder]="!uploadedFileName ? '' : uploadedFileName" readonly />
+    <div id="uploadDiv" class="input-group-append">
+      <input type="file" id="upload" formControlName="upload" #uploadRef (change)="fileChanged($event)" />
+      <button type="button" class="btn btn-outline-secondary" (click)="uploadRef.click()">
+        <fa-icon [icon]="folderOpenIcon"></fa-icon> Open file...
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,69 @@
+code, .code {
+  font-family: Consolas, 'Courier New', Courier, monospace;
+}
+
+code {
+  color: black;
+}
+
+table.selectable-rows > tbody > tr {
+  cursor: pointer;
+}
+
+th, td {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  vertical-align: middle;
+}
+
+.row-selected > th, .row-selected > td {
+  background-color: darkgreen;
+}
+
+.row-selected > th > code, .row-selected > td > code {
+  color: lightgreen;
+}
+
+.red-colored {
+  color: red;
+}
+
+.row-entry-point > th, .row-entry-point > td {
+  background-color: darkviolet;
+}
+
+.row-entry-point > th > code, .row-entry-point > td > code {
+  color: thistle;
+}
+
+.row-destination > th, .row-destination > td {
+  background-color: darkblue;
+}
+
+.row-selected > td > .red-colored, .row-destination > td > .red-colored, .row-entry-point > td > .red-colored {
+  color: lightpink;
+}
+
+.row-destination > th > code, .row-destination > td > code {
+  color: lightblue;
+}
+
+.pulse {
+  animation-name: pulse;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+.row-selected > td > a, .row-destination > td > a, .row-entry-point > td > a {
+  color: lightblue;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); }
+  50% { transform: scale(0.5); }
+  to { transform: scale(1); }
+}
+
+.tab-pane {
+  padding-top: 10px;
+}

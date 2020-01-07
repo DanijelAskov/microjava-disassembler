@@ -1,0 +1,164 @@
+<div class="col-12">
+  <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <a class="nav-item nav-link active" id="nav-header-tab" data-toggle="tab" href="#nav-header" role="tab" aria-controls="nav-header" aria-selected="true"><fa-icon [icon]="fileIcon"></fa-icon> &nbsp; File content</a>
+      <a class="nav-item nav-link" id="nav-stats-tab" data-toggle="tab" href="#nav-stats" role="tab" aria-controls="nav-stats" aria-selected="false"><fa-icon [icon]="barChartIcon"></fa-icon> &nbsp; Statistics</a>
+    </div>
+  </nav>
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-header" role="tabpanel" aria-labelledby="nav-header-tab">
+      <ng-container *ngIf="error; else elseTemplate1">
+        <div class="alert alert-danger" role="alert">
+          {{error}}
+        </div>
+      </ng-container>
+      <ng-template #elseTemplate1>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <tbody>
+              <tr>
+                <th>Code size</th>
+                <td class="text-center">
+                  <ng-container *ngIf="loading; else elseTemplate7">
+                    <img src="assets/gear.gif" alt="Spinner" style="width: 32px; height: auto;" />&nbsp;Wait for a few seconds... Crunching zeros and ones just for you!
+                  </ng-container>
+                  <ng-template #elseTemplate7>
+                    {{disassembler.getCodeSize() + ' bytes'}}
+                    <ng-container *ngIf="disassembler.getCodeSize() < 0">
+                      &nbsp;
+                      <fa-icon [icon]="exclamationIcon" class="pulse red-colored" data-toggle="tooltip" data-placement="bottom" title="Negative value is not expected here!"></fa-icon>
+                    </ng-container>
+                  </ng-template>
+                </td>
+              </tr>
+              <tr>
+                <th>Data size</th>
+                <td class="text-center">
+                  <ng-container *ngIf="loading; else elseTemplate8">
+                    <img src="assets/gear.gif" alt="Spinner" style="width: 32px; height: auto;" />&nbsp;Wait for a few seconds... Crunching zeros and ones just for you!
+                  </ng-container>
+                  <ng-template #elseTemplate8>
+                    {{disassembler.getDataSize() + ' bytes'}}
+                    <ng-container *ngIf="disassembler.getDataSize() < 0">
+                      &nbsp;
+                      <fa-icon [icon]="exclamationIcon" class="pulse red-colored" data-toggle="tooltip" data-placement="bottom" title="Negative value is not expected here!"></fa-icon>
+                    </ng-container>
+                  </ng-template>
+                </td>
+              </tr>
+              <tr>
+                <th style="color: darkviolet;">Entry point</th>
+                <td class="text-center">
+                  <ng-container *ngIf="loading; else elseTemplate9">
+                    <img src="assets/gear.gif" alt="Spinner" style="width: 32px; height: auto;" />&nbsp;Wait for a few seconds... Crunching zeros and ones just for you!
+                  </ng-container>
+                  <ng-template #elseTemplate9>
+                    <ng-container *ngIf="disassembler.getEntryPoint() < disassembler.getCodeSize(); else elseTemplate11">
+                      <a href="{{'#address-' + disassembler.getEntryPoint()}}">{{disassembler.getEntryPoint()}}</a>
+                    </ng-container>
+                    <ng-template #elseTemplate11>
+                      {{disassembler.getEntryPoint()}}
+                      &nbsp;
+                      <fa-icon [icon]="exclamationIcon" class="pulse red-colored" data-toggle="tooltip" data-placement="bottom" title="Entry point not found in the object file!"></fa-icon>
+                    </ng-template>
+                  </ng-template>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover selectable-rows">
+            <thead>
+              <tr>
+                <th scope="col" class="text-right">Address</th>
+                <th scope="col">Binary</th>
+                <th scope="col">Hexadecimal</th>
+                <th scope="col">Symbolic</th>
+              </tr>
+            </thead>
+            <ng-container *ngIf="loading; else elseTemplate4">
+              <tbody>
+                <tr>
+                  <td colspan="4" class="text-center"><img src="assets/gear.gif" alt="Spinner" style="width: 32px; height: auto;" />&nbsp;Wait for a few seconds... Crunching zeros and ones just for you!</td>
+                </tr>
+              </tbody>
+            </ng-container>
+            <ng-template #elseTemplate4>
+              <ng-container *ngIf="!error; else elseTemplate2">
+                <tbody>
+                  <tr *ngFor="let disassembledInstruction of disassembler.disassembledInstructions; let i=index"
+                  (click)="setSelectedIndex(i)"
+                  [class.row-selected]="i === selectedIndex"
+                  [class.row-entry-point]="i === entryPointIndex"
+                  [class.row-destination]="i === destinationIndex">
+                    <th scope="row"
+                    [id]="'address-' + disassembledInstruction.address"
+                    class="text-right">
+                      <code>{{disassembledInstruction.address}}</code>
+                    </th>
+                    <td>
+                      <ng-container *ngFor="let byte of disassembledInstruction.bytes; let j=index">
+                        <code>{{byte.toString(2).padStart(8, '0')}}</code>
+                        <code *ngIf="j < disassembledInstruction.bytes.length - 1">&nbsp;</code>
+                        <br *ngIf="!((j + 1) % 4)" />
+                      </ng-container>
+                    </td>
+                    <td>
+                      <ng-container *ngFor="let byte of disassembledInstruction.bytes; let j=index">
+                        <code>{{byte.toString(16).padStart(2, '0')}}</code>
+                        <code *ngIf="j < disassembledInstruction.bytes.length - 1">&nbsp;</code>
+                        <br *ngIf="!((j + 1) % 4)" />
+                      </ng-container>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="!disassembledInstruction.warning; else elseTemplate5">
+                        <ng-container *ngIf="disassembledInstruction.referencedAddress; else elseTemplate6">
+                          <a [href]="'#address-' +  disassembledInstruction.referencedAddress"
+                          class="code"
+                          (mouseenter)="selectDestination(disassembledInstruction.referencedAddress)"
+                          (mouseleave)="unselectDestination()">
+                            {{disassembledInstruction.toString()}}
+                          </a>
+                        </ng-container>
+                        <ng-template #elseTemplate6>
+                          <code>{{disassembledInstruction.toString()}}</code>
+                        </ng-template>
+                      </ng-container>
+                      <ng-template #elseTemplate5>
+                        <code>{{disassembledInstruction.toString()}}</code>
+                        &nbsp;
+                        <fa-icon [icon]="exclamationIcon" class="pulse red-colored" data-toggle="tooltip" data-placement="bottom" title="{{disassembledInstruction.warning}}"></fa-icon>
+                      </ng-template> 
+                    </td>
+                  </tr>
+                </tbody>
+              </ng-container>
+              <ng-template #elseTemplate2>
+                <tbody>
+                  <tr>
+                    <td colspan="4" class="text-center">
+                      <div class="alert alert-danger" role="alert">
+                        {{error}}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </ng-template>
+            </ng-template>
+          </table>
+        </div>
+      </ng-template>
+    </div>
+    <div class="tab-pane fade" id="nav-stats" role="tabpanel" aria-labelledby="nav-stats-tab">
+      <ng-container *ngIf="error; else elseTemplate10">
+        <div class="alert alert-danger" role="alert">
+          {{error}}
+        </div>
+      </ng-container>
+      <ng-template #elseTemplate10>
+        <stats-component [loading]="loading" [disassembler]="disassembler"></stats-component>
+      </ng-template>
+    </div>
+  </div>
+</div>

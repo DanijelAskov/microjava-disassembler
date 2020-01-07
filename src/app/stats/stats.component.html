@@ -1,0 +1,81 @@
+<h3>General</h3>
+<hr />
+<table class="table table-bordered table-hover">
+  <tbody>
+    <tr>
+      <th scope="row">Number of instructions</th>
+      <td class="text-center">
+        <ng-container *ngIf="loading; else elseTemplate1">
+          <img src="assets/gear.gif" alt="Spinner" style="width: 32px; height: auto;" />&nbsp;Wait for a few seconds... Crunching zeros and ones just for you!
+        </ng-container>
+        <ng-template #elseTemplate1>
+          {{numInstructions}}
+        </ng-template>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Average instruction length</th>
+      <td class="text-center">
+        <ng-container *ngIf="loading; else elseTemplate2">
+          <img src="assets/gear.gif" alt="Spinner" style="width: 32px; height: auto;" />&nbsp;Wait for a few seconds... Crunching zeros and ones just for you!
+        </ng-container>
+        <ng-template #elseTemplate2>
+          {{averageInstructionLength.toFixed(2) + ' bytes'}}
+        </ng-template>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Number of subroutines</th>
+      <td class="text-center">
+        <ng-container *ngIf="loading; else elseTemplate3">
+          <img src="assets/gear.gif" alt="Spinner" style="width: 32px; height: auto;" />&nbsp;Wait for a few seconds... Crunching zeros and ones just for you!
+        </ng-container>
+        <ng-template #elseTemplate3>
+          {{numSubroutines}}
+        </ng-template>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Average jump offset</th>
+      <td class="text-center">
+        <ng-container *ngIf="loading; else elseTemplate4">
+          <img src="assets/gear.gif" alt="Spinner" style="width: 32px; height: auto;" />&nbsp;Wait for a few seconds... Crunching zeros and ones just for you!
+        </ng-container>
+        <ng-template #elseTemplate4>
+          {{averageJumpOffset.toFixed(2) + ' bytes'}}
+        </ng-template>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h3>Instructions</h3>
+<hr />
+<div class="table-responsive">
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th scope="col" class="text-center">#</th>
+        <th>Instruction</th>
+        <th class="text-center">Absoulte frequency</th>
+        <th class="text-center">Relative frequency</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="loading; else elseTemplate5">
+        <tr>
+          <td colspan="4" class="text-center">
+            <img src="assets/gear.gif" alt="Spinner" style="width: 32px; height: auto;" />&nbsp;Wait for a few seconds... Crunching zeros and ones just for you!
+          </td>
+        </tr>
+      </ng-container>
+      <ng-template #elseTemplate5>
+        <tr *ngFor="let instructionCount of instructionCountArray; let i=index">
+          <th scope="row" class="text-center">{{i + 1}}</th>
+          <td><code>{{instructionCount.mnemonic}}</code></td>
+          <td class="text-center">{{instructionCount.count}}</td>
+          <td class="text-center">{{((instructionCount.count / numInstructions) * 100).toFixed(2) + '%'}}</td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </table>
+</div>
