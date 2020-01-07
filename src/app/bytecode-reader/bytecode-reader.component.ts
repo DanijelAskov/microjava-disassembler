@@ -9,9 +9,9 @@ import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 })
 export class BytecodeReaderComponent implements OnInit {
 
-  private file: any;
-  @Output("bytecode") private bytecodeEmitter: EventEmitter<ArrayBuffer> = new EventEmitter();
-  private uploadedFileName: string = "simple_calculator.obj";
+  file: any;
+  @Output("bytecode") bytecodeEmitter: EventEmitter<ArrayBuffer> = new EventEmitter();
+  uploadedFileName: string = "simple_calculator.obj";
   folderOpenIcon: IconDefinition = faFolderOpen;
 
   constructor() { }

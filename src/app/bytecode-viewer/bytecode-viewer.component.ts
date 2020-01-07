@@ -10,22 +10,22 @@ import { faExclamationCircle, faChartBar, faFile } from '@fortawesome/free-solid
 })
 export class BytecodeViewerComponent implements OnInit {
 
-  private uint8Array: Uint8Array;
-  private charArray: string[] = [];
-  private disassembler: Disassembler;
-  private error: string;
+  uint8Array: Uint8Array;
+  charArray: string[] = [];
+  disassembler: Disassembler;
+  error: string;
 
-  private selectedIndex: number;
-  private entryPointIndex: number;
-  private destinationIndex: number;
+  selectedIndex: number;
+  entryPointIndex: number;
+  destinationIndex: number;
 
-  private loading: boolean = false;
+  loading: boolean = false;
 
-  private exclamationIcon: IconDefinition = faExclamationCircle;
-  private fileIcon: IconDefinition = faFile;
-  private barChartIcon: IconDefinition = faChartBar;
+  exclamationIcon: IconDefinition = faExclamationCircle;
+  fileIcon: IconDefinition = faFile;
+  barChartIcon: IconDefinition = faChartBar;
 
-  private firstSet: boolean = true;
+  firstSet: boolean = true;
 
   constructor() {
   }

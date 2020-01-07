@@ -33,22 +33,22 @@ class DisassembledInstruction {
 
 export class Disassembler {
 
-  private uint8Array: Uint8Array;
-  private current: number = 0;
-  private address: number = 0;
-  private headerSize: number = 0;
+  uint8Array: Uint8Array;
+  current: number = 0;
+  address: number = 0;
+  headerSize: number = 0;
   public disassembledInstructions: DisassembledInstruction[];
 
-  private opcode: number;
-  private operand1: number;
-  private operand2: number;
+  opcode: number;
+  operand1: number;
+  operand2: number;
 
-  private codeSize: number;
-  private dataSize: number;
-  private entryPoint: number;
+  codeSize: number;
+  dataSize: number;
+  entryPoint: number;
 
-  private jumpDestination: number;
-  private warning: string;
+  jumpDestination: number;
+  warning: string;
 
   public static readonly MIN_OBJ_SIZE: number = 1 + 1 + 3 * 4 + 1;
   
@@ -152,26 +152,26 @@ export class Disassembler {
     this.disassembledInstructions = [];
   }
 
-  private get() {
+  get() {
     return this.uint8Array[this.current++] & 0x0ff;
   }
 
-  private get2() {
+  get2() {
     return (this.get() << 8 | this.get()) & 0x0ffff;
   }
 	
-  private get4() {
+  get4() {
     return (this.get2() << 16 | this.get2());
   }
 
-  private jumpOffset() {
+  jumpOffset() {
 		let displacement = this.operand1 = this.get2();
     displacement = displacement << 16 >> 16;
 		this.jumpDestination = this.address + displacement;
 		return displacement + ' (dest: ' + this.jumpDestination + ')';
   }
 
-  private put(instruction: Instruction, bytes: Uint8Array, operands: string = null, isJumpInstruction: boolean = false) {
+  put(instruction: Instruction, bytes: Uint8Array, operands: string = null, isJumpInstruction: boolean = false) {
     if (this.jumpDestination && (this.jumpDestination < 0 || this.jumpDestination >= this.uint8Array.length)) {
       this.warning = 'This instruction is problematic! Destination address does not exist.';
     }

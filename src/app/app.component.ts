@@ -9,9 +9,9 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 })
 export class AppComponent {
 
-  private bytecode: ArrayBuffer;
-  private currentDate: Date = new Date();
-  private infoIcon: IconDefinition = faInfoCircle;
+  bytecode: ArrayBuffer;
+  currentDate: Date = new Date();
+  infoIcon: IconDefinition = faInfoCircle;
 
   setBytecode(bytecode: ArrayBuffer) {
     this.bytecode = bytecode;

@@ -8,15 +8,15 @@ import { Disassembler } from '../shared/disassembler.shared';
 })
 export class StatsComponent implements OnInit {
 
-  @Input("loading") private loading: boolean = false;
+  @Input("loading") public loading: boolean = false;
 
-  private numInstructions: number = 0;
-  private averageInstructionLength: number = 0;
-  private numSubroutines: number = 0;
-  private averageJumpOffset: number = 0;
+  public numInstructions: number = 0;
+  public averageInstructionLength: number = 0;
+  public numSubroutines: number = 0;
+  public averageJumpOffset: number = 0;
   private numJumpInstructions: number = 0;
   private instructionCount = {};
-  private instructionCountArray = [];
+  public instructionCountArray = [];
 
   constructor() { }
 
