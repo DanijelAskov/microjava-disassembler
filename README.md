@@ -5,6 +5,9 @@
 An Angular web application for disassembling MicroJava object files.
 You can find more about MicroJava and the compiler which generates object files [here](https://github.com/DanijelAskov/microjava-compiler).
 
+MicroJava Disassembler is up and running.
+Check it out [here](https://danijelaskov.github.io/microjava-disassembler/).
+
 ## Development server
 
 Run `ng serve` for a dev server.
