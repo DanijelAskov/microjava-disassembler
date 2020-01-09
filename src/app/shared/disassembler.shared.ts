@@ -145,7 +145,10 @@ export class Disassembler {
     Disassembler.JLT, Disassembler.JLE, Disassembler.JGT, Disassembler.JGE,
     Disassembler.CALL, Disassembler.RETURN, Disassembler.ENTER, Disassembler.EXIT,
     Disassembler.READ, Disassembler.PRINT, Disassembler.BREAD, Disassembler.BPRINT,
-    Disassembler.TRAP, Disassembler.INVOKEVIRTUAL, Disassembler.DUP_X1, Disassembler.DUP_X2];
+    Disassembler.TRAP, Disassembler.INVOKEVIRTUAL, Disassembler.DUP_X1, Disassembler.DUP_X2
+  ];
+
+  private startAddresses: number[];
 
   constructor(uint8Array: Uint8Array) {
     this.uint8Array = uint8Array;
@@ -191,10 +194,13 @@ export class Disassembler {
     
     this.headerSize = this.current;
     this.address = this.current - this.headerSize;
+
+    this.startAddresses = [];
     
     while (this.current < this.uint8Array.length) {
       this.warning = null;
       this.jumpDestination = null;
+      this.startAddresses.push(this.address);
       switch(this.opcode = this.get()) {
 				case Disassembler.LOAD.opcode: {
           this.operand1 = this.get();
@@ -486,6 +492,12 @@ export class Disassembler {
         }
       }
     }
+
+    this.disassembledInstructions.forEach(disassembledInstruction => {
+      if (disassembledInstruction.referencedAddress && !this.startAddresses.includes(disassembledInstruction.referencedAddress)) {
+        disassembledInstruction.warning = "This instruction is problematic! It jumps in the middle of another instruction."
+      }
+    });
   }
 
   getCodeSize() {
