@@ -172,7 +172,7 @@ export class Disassembler {
   }
 
   put(instruction: Instruction, bytes: Uint8Array, operands: string = null, isJumpInstruction: boolean = false) {
-    if (this.jumpDestination && (this.jumpDestination < 0 || this.jumpDestination >= this.uint8Array.length)) {
+    if (this.jumpDestination && (this.jumpDestination < 0 || this.jumpDestination >= this.uint8Array.length - this.headerSize)) {
       this.warning = 'This instruction is problematic! Destination address does not exist.';
     }
     this.disassembledInstructions.push(new DisassembledInstruction(this.address, instruction, operands, isJumpInstruction ? this.jumpDestination : null, this.warning, bytes));
