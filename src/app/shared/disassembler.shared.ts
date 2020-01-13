@@ -513,7 +513,7 @@ export class Disassembler {
     }
 
     this.disassembledInstructions.forEach(disassembledInstruction => {
-      if (disassembledInstruction.referencedAddress && !this.startAddresses.includes(disassembledInstruction.referencedAddress)) {
+      if (disassembledInstruction.referencedAddress && disassembledInstruction.referencedAddress >= 0 && disassembledInstruction.referencedAddress < this.uint8Array.length - this.headerSize && !this.startAddresses.includes(disassembledInstruction.referencedAddress)) {
         disassembledInstruction.warning = "This instruction is problematic! It jumps in the middle of another instruction."
       }
     });
