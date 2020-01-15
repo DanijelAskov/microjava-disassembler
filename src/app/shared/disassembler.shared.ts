@@ -313,7 +313,9 @@ export class Disassembler {
         }
 				case Disassembler.CONST.opcode: {
           this.operand1 = this.get4();
-          this.put(Disassembler.CONST, new Uint8Array([this.opcode, (this.operand1 >> 24) & 0x0ff, (this.operand1 >> 16) & 0x0ff, (this.operand1 >> 8) & 0x0ff, this.operand1 & 0x0ff]), this.operand1.toString());
+          let asciiChar = String.fromCharCode(this.operand1);
+          let isPrintable = /^[ -~]$/.test(asciiChar);
+          this.put(Disassembler.CONST, new Uint8Array([this.opcode, (this.operand1 >> 24) & 0x0ff, (this.operand1 >> 16) & 0x0ff, (this.operand1 >> 8) & 0x0ff, this.operand1 & 0x0ff]), this.operand1.toString() + (isPrintable ? " (ASCII char: '" + asciiChar + "')" : ""));
           break;
         }
 				case Disassembler.ADD.opcode: {
