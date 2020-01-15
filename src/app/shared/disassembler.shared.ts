@@ -121,8 +121,8 @@ export class Disassembler {
   public static readonly ARRAYLENGTH: Instruction = {mnemonic: "arraylength", opcode: 38};
 
   public static readonly POP: Instruction = {mnemonic: "pop", opcode: 39};
-  public static readonly DUP: Instruction = {mnemonic: "dup_x1", opcode: 40};
-  public static readonly DUP2: Instruction = {mnemonic: "dup_x2", opcode: 41};
+  public static readonly DUP: Instruction = {mnemonic: "dup", opcode: 40};
+  public static readonly DUP2: Instruction = {mnemonic: "dup2", opcode: 41};
 
   public static readonly JMP: Instruction = {mnemonic: "jmp", opcode: 42};
   public static readonly JEQ: Instruction = {mnemonic: "jeq", opcode: 43};

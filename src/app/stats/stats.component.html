@@ -69,6 +69,16 @@
 </table>
 <h3>Instructions</h3>
 <hr />
+<p>
+  This object file contains {{this.instructionCountArray.length}} out of {{this.totalNumInstructions}} available instructions, which is {{((this.instructionCountArray.length / this.totalNumInstructions) * 100).toFixed(2)}}% of the instruction set.
+  <span *ngIf="this.leftOutInstructions.length">Instructions that do not appear in this object file are:</span>
+</p>
+<ol *ngIf="this.leftOutInstructions.length">
+  <li *ngFor="let leftOutInstruction of this.leftOutInstructions">
+    <code>{{leftOutInstruction.mnemonic}}</code>
+  </li>
+</ol>
+<p>Instructions that do appear in this object file are:</p>
 <div class="table-responsive">
   <table class="table table-bordered table-hover">
     <thead>

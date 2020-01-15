@@ -28,10 +28,10 @@ import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 })
 export class BytecodeReaderComponent implements OnInit {
 
-  file: any;
-  @Output("bytecode") bytecodeEmitter: EventEmitter<ArrayBuffer> = new EventEmitter();
-  uploadedFileName: string = "simple_calculator.obj";
-  folderOpenIcon: IconDefinition = faFolderOpen;
+  private file: any;
+  @Output("bytecode") public bytecodeEmitter: EventEmitter<ArrayBuffer> = new EventEmitter();
+  public uploadedFileName: string = "simple_calculator.obj";
+  public folderOpenIcon: IconDefinition = faFolderOpen;
 
   constructor() { }
 
@@ -39,8 +39,9 @@ export class BytecodeReaderComponent implements OnInit {
   }
 
   fileChanged(event: Event) {
-    if ((event.target as HTMLInputElement).files.length > 0) {
-      this.file = (event.target as HTMLInputElement).files[0];
+    let eventTarget = event.target as HTMLInputElement;
+    if (eventTarget.files.length > 0) {
+      this.file = eventTarget.files[0];
       this.emitBytes();
     } else {
       this.bytecodeEmitter.emit(null);

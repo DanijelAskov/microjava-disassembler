@@ -37,6 +37,9 @@ export class StatsComponent implements OnInit {
   private instructionCount = {};
   public instructionCountArray = [];
 
+  public totalNumInstructions = Disassembler.INSTRUCTIONS.length;
+  public leftOutInstructions = Object.assign([], Disassembler.INSTRUCTIONS);
+
   constructor() { }
 
   ngOnInit() {
@@ -77,6 +80,9 @@ export class StatsComponent implements OnInit {
         mnemonic: key,
         count: this.instructionCount[key]
       });
+      this.leftOutInstructions.splice(this.leftOutInstructions.findIndex((instruction) => {
+        return instruction.mnemonic === key;
+      }), 1);
     }
     this.instructionCountArray.sort((ic1, ic2) => {
       return ic2.count - ic1.count;
