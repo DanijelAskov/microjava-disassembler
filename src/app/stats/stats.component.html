@@ -78,8 +78,8 @@
     <code>{{leftOutInstruction.mnemonic}}</code>
   </li>
 </ol>
-<p>Instructions that do appear in this object file are:</p>
-<div class="table-responsive">
+<p *ngIf="!loading && instructionCountArray.length">Instructions that do appear in this object file are:</p>
+<div *ngIf="!loading && instructionCountArray.length" class="table-responsive">
   <table class="table table-bordered table-hover">
     <thead>
       <tr>

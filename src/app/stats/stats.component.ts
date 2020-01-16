@@ -18,7 +18,7 @@
  */
 
 import { Component, OnInit, Input } from '@angular/core';
-import { Disassembler } from '../shared/disassembler.shared';
+import { Disassembler, Instruction } from '../shared/disassembler.shared';
 
 @Component({
   selector: 'stats-component',
@@ -38,7 +38,7 @@ export class StatsComponent implements OnInit {
   public instructionCountArray = [];
 
   public totalNumInstructions = Disassembler.INSTRUCTIONS.length;
-  public leftOutInstructions = Object.assign([], Disassembler.INSTRUCTIONS);
+  public leftOutInstructions: Instruction[] = [];
 
   constructor() { }
 
@@ -57,20 +57,23 @@ export class StatsComponent implements OnInit {
     this.numJumpInstructions = 0;
     this.instructionCount = {};
     this.instructionCountArray = [];
+    this.leftOutInstructions = Object.assign([], Disassembler.INSTRUCTIONS);
     
-    this.numInstructions = disassembler.disassembledInstructions.length;
     disassembler.disassembledInstructions.forEach(disassembledInstruction => {
-      this.averageInstructionLength += disassembledInstruction.bytes.length;
-      if (disassembledInstruction.instruction == Disassembler.RETURN)
-        this.numSubroutines++;
-      else if (disassembledInstruction.instruction.opcode >= Disassembler.JMP.opcode && disassembledInstruction.instruction.opcode <= Disassembler.JGE.opcode && !disassembledInstruction.warning) {
-        this.averageJumpOffset += disassembledInstruction.referencedAddress - disassembledInstruction.address;
-        this.numJumpInstructions++;
+      if (disassembledInstruction.instruction !== Disassembler.INVALID_INSTR) {
+        this.numInstructions++;
+        this.averageInstructionLength += disassembledInstruction.bytes.length;
+        if (disassembledInstruction.instruction == Disassembler.RETURN)
+          this.numSubroutines++;
+        else if (disassembledInstruction.instruction.opcode >= Disassembler.JMP.opcode && disassembledInstruction.instruction.opcode <= Disassembler.JGE.opcode && !disassembledInstruction.warning) {
+          this.averageJumpOffset += disassembledInstruction.referencedAddress - disassembledInstruction.address;
+          this.numJumpInstructions++;
+        }
+        let mnemonic = disassembledInstruction.instruction.mnemonic;
+        if (!(mnemonic in this.instructionCount))
+          this.instructionCount[mnemonic] = 0;
+        this.instructionCount[mnemonic]++;
       }
-      let mnemonic = disassembledInstruction.instruction.mnemonic;
-      if (!(mnemonic in this.instructionCount))
-        this.instructionCount[mnemonic] = 0;
-      this.instructionCount[mnemonic]++;
     });
     this.averageInstructionLength /= this.numInstructions;
     this.averageJumpOffset = this.numJumpInstructions ? this.averageJumpOffset / this.numJumpInstructions : 0;

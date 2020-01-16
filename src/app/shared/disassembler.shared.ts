@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class Instruction {
+export class Instruction {
   public readonly opcode: number;
   public readonly mnemonic: string;
 }
@@ -52,22 +52,23 @@ class DisassembledInstruction {
 
 export class Disassembler {
 
-  uint8Array: Uint8Array;
-  current: number = 0;
-  address: number = 0;
-  headerSize: number = 0;
+  private uint8Array: Uint8Array;
+  private current: number = 0;
+  private address: number = 0;
+  private headerSize: number = 0;
   public disassembledInstructions: DisassembledInstruction[];
 
-  opcode: number;
-  operand1: number;
-  operand2: number;
+  private opcode: number;
+  private operand1: number;
+  private operand2: number;
 
-  codeSize: number;
-  dataSize: number;
-  entryPoint: number;
+  private declaredCodeSize: number;
+  private realCodeSize = 0;
+  private dataSize: number;
+  private entryPoint: number;
 
-  jumpDestination: number;
-  warning: string;
+  private jumpDestination: number;
+  private warning: string;
 
   public static readonly MIN_OBJ_SIZE: number = 1 + 1 + 3 * 4 + 1;
   
@@ -149,6 +150,8 @@ export class Disassembler {
   public static readonly DUP_X1: Instruction = {mnemonic: "dup_x1", opcode: 59};
   public static readonly DUP_X2: Instruction = {mnemonic: "dup_x2", opcode: 60};
 
+  public static readonly INVALID_INSTR: Instruction = {mnemonic: "", opcode: 61};
+
   public static readonly INSTRUCTIONS: Instruction[] = [
     Disassembler.LOAD, Disassembler.LOAD_0, Disassembler.LOAD_1, Disassembler.LOAD_2,
     Disassembler.LOAD_3, Disassembler.STORE, Disassembler.STORE_0, Disassembler.STORE_1,
@@ -175,6 +178,7 @@ export class Disassembler {
   }
 
   get() {
+    this.realCodeSize++;
     return this.uint8Array[this.current++] & 0x0ff;
   }
 
@@ -207,9 +211,11 @@ export class Disassembler {
     else if (String.fromCharCode(this.get()) != 'M' || String.fromCharCode(this.get()) != 'J')
       throw new Error("The file has invalid header!");
     
-    this.codeSize = this.get4();
+    this.declaredCodeSize = this.get4();
     this.dataSize = this.get4();
     this.entryPoint = this.get4();
+
+    this.realCodeSize = 0;
     
     this.headerSize = this.current;
     this.address = this.current - this.headerSize;
@@ -265,11 +271,17 @@ export class Disassembler {
         }
 				case Disassembler.GETSTATIC.opcode: {
           this.operand1 = this.get2();
+          if (this.operand1 >= this.dataSize) {
+            this.warning = "This adress is out of Data memory area address range" +  (this.dataSize > 0 ? "([0, " + (this.dataSize - 1) + "])" : "") + "!"; 
+          }
           this.put(Disassembler.GETSTATIC, new Uint8Array([this.opcode, (this.operand1 >> 8) & 0x0ff, this.operand1 & 0x0ff]), this.operand1.toString());
           break;
         }
 				case Disassembler.PUTSTATIC.opcode: {
           this.operand1 = this.get2();
+          if (this.operand1 >= this.dataSize) {
+            this.warning = "This adress is out of Data memory area address range" +  (this.dataSize > 0 ? "([0, " + (this.dataSize - 1) + "])" : "") + "!"; 
+          }
           this.put(Disassembler.PUTSTATIC, new Uint8Array([this.opcode,(this.operand1 >> 8) & 0x0ff, this.operand1 & 0x0ff]), this.operand1.toString());
           break;
         }
@@ -508,7 +520,7 @@ export class Disassembler {
         }						 
 				default: {
           this.warning = 'This is not a valid instruction!';
-          this.put({opcode: -1, mnemonic: ''}, new Uint8Array([this.opcode]));
+          this.put(Disassembler.INVALID_INSTR, new Uint8Array([this.opcode]));
           break;
         }
       }
@@ -521,8 +533,8 @@ export class Disassembler {
     });
   }
 
-  getCodeSize() {
-    return this.codeSize;
+  getDeclaredCodeSize() {
+    return this.declaredCodeSize;
   }
 
   getDataSize() {
@@ -531,6 +543,10 @@ export class Disassembler {
 
   getEntryPoint() {
     return this.entryPoint;
+  }
+
+  getRealCodeSize() {
+    return this.realCodeSize;
   }
 
 }
