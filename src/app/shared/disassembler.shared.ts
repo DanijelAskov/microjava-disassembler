@@ -272,7 +272,7 @@ export class Disassembler {
 				case Disassembler.GETSTATIC.opcode: {
           this.operand1 = this.get2();
           if (this.operand1 >= this.dataSize) {
-            this.warning = "This adress is out of Data memory area address range" +  (this.dataSize > 0 ? "([0, " + (this.dataSize - 1) + "])" : "") + "!"; 
+            this.warning = "This adress is out of Data memory area address range" +  (this.dataSize > 0 ? " ([0, " + (this.dataSize - 1) + "])" : "") + "!"; 
           }
           this.put(Disassembler.GETSTATIC, new Uint8Array([this.opcode, (this.operand1 >> 8) & 0x0ff, this.operand1 & 0x0ff]), this.operand1.toString());
           break;

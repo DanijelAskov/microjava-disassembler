@@ -45,11 +45,11 @@
                     {{disassembler.getDeclaredCodeSize() + ' bytes'}}
                     <ng-container *ngIf="disassembler.getDeclaredCodeSize() < 0">
                       &nbsp;
-                      <fa-icon [icon]="exclamationIcon" class="pulse red-colored" data-toggle="tooltip" data-placement="bottom" title="Negative value is not expected here!"></fa-icon>
+                      <fa-icon [icon]="exclamationIcon" class="pulse red-colored" tooltip="Negative value is not expected here!"></fa-icon>
                     </ng-container>
                     <ng-container *ngIf="disassembler.getDeclaredCodeSize() !== disassembler.getRealCodeSize()">
                       &nbsp;
-                      <fa-icon [icon]="exclamationIcon" class="pulse red-colored" data-toggle="tooltip" data-placement="bottom" title="Code size declared here does not match real code size!"></fa-icon>
+                      <fa-icon [icon]="exclamationIcon" class="pulse red-colored" tooltip="Code size declared here does not match the real code size!"></fa-icon>
                     </ng-container>
                   </ng-template>
                 </td>
@@ -64,7 +64,7 @@
                     {{disassembler.getDataSize() + ' bytes'}}
                     <ng-container *ngIf="disassembler.getDataSize() < 0">
                       &nbsp;
-                      <fa-icon [icon]="exclamationIcon" class="pulse red-colored" data-toggle="tooltip" data-placement="bottom" title="Negative value is not expected here!"></fa-icon>
+                      <fa-icon [icon]="exclamationIcon" class="pulse red-colored" tooltip="Negative value is not expected here!"></fa-icon>
                     </ng-container>
                   </ng-template>
                 </td>
@@ -76,13 +76,21 @@
                     <img src="assets/gear.gif" alt="Spinner" style="width: 32px; height: auto;" />&nbsp;Wait for a few seconds... Crunching zeros and ones just for you!
                   </ng-container>
                   <ng-template #elseTemplate9>
-                    <ng-container *ngIf="disassembler.getEntryPoint() < disassembler.getRealCodeSize(); else elseTemplate11">
+                    <ng-container *ngIf="this.entryPointIndex !== null; else elseTemplate11">
                       <a href="{{'#address-' + disassembler.getEntryPoint()}}">{{disassembler.getEntryPoint()}}</a>
                     </ng-container>
                     <ng-template #elseTemplate11>
-                      {{disassembler.getEntryPoint()}}
-                      &nbsp;
-                      <fa-icon [icon]="exclamationIcon" class="pulse red-colored" data-toggle="tooltip" data-placement="bottom" title="Entry point not found in the object file!"></fa-icon>
+                      <ng-container *ngIf="disassembler.getEntryPoint() >= disassembler.getRealCodeSize(); then thenTemplate12; else elseTemplate12"></ng-container>
+                      <ng-template #thenTemplate12>
+                        {{disassembler.getEntryPoint()}}
+                        &nbsp;
+                        <fa-icon [icon]="exclamationIcon" class="pulse red-colored" tooltip="This address does not exist in the object file!"></fa-icon>
+                      </ng-template>
+                      <ng-template #elseTemplate12>
+                        {{disassembler.getEntryPoint()}}
+                        &nbsp;
+                        <fa-icon [icon]="exclamationIcon" class="pulse red-colored" tooltip="This is not an instruction address!"></fa-icon>
+                      </ng-template> 
                     </ng-template>
                   </ng-template>
                 </td>
@@ -151,7 +159,7 @@
                       <ng-template #elseTemplate5>
                         <code>{{disassembledInstruction.toString()}}</code>
                         &nbsp;
-                        <fa-icon [icon]="exclamationIcon" class="pulse red-colored" data-toggle="tooltip" data-placement="bottom" title="{{disassembledInstruction.warning}}"></fa-icon>
+                        <fa-icon [icon]="exclamationIcon" class="pulse red-colored" tooltip="{{disassembledInstruction.warning}}"></fa-icon>
                       </ng-template> 
                     </td>
                   </tr>
