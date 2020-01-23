@@ -75,7 +75,7 @@ export class StatsComponent implements OnInit {
         this.instructionCount[mnemonic]++;
       }
     });
-    this.averageInstructionLength /= this.numInstructions;
+    this.averageInstructionLength = this.numInstructions ? this.averageInstructionLength / this.numInstructions : 0;
     this.averageJumpOffset = this.numJumpInstructions ? this.averageJumpOffset / this.numJumpInstructions : 0;
 
     for (let key in this.instructionCount){
