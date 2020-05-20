@@ -36,35 +36,53 @@ th, td {
 }
 
 .row-selected > th, .row-selected > td {
-  background-color: darkgreen;
+  background-color: lightgreen;
 }
 
 .row-selected > th > code, .row-selected > td > code {
-  color: lightgreen;
+  color: black;
 }
 
 .red-colored {
   color: red;
 }
 
+.blue-colored {
+  color: blue;
+}
+
 .row-entry-point > th, .row-entry-point > td {
-  background-color: darkviolet;
+  background-color: violet;
 }
 
 .row-entry-point > th > code, .row-entry-point > td > code {
-  color: thistle;
+  color: black;
 }
 
 .row-destination > th, .row-destination > td {
-  background-color: darkblue;
-}
-
-.row-selected > td > .red-colored, .row-destination > td > .red-colored, .row-entry-point > td > .red-colored {
-  color: lightpink;
+  background-color: lightblue;
 }
 
 .row-destination > th > code, .row-destination > td > code {
+  color: black;
+}
+
+/*
+.row-selected > td > a, .row-destination > td > a, .row-entry-point > td > a {
   color: lightblue;
+}
+*/
+
+.row-selected > td > .red-colored, .row-destination > td > .red-colored, .row-entry-point > td > .red-colored {
+  color: red;
+}
+
+.row-selected > td > .blue-colored, .row-destination > td > .blue-colored, .row-entry-point > td > .blue-colored {
+  color: blue;
+}
+
+.tab-pane {
+  padding-top: 10px;
 }
 
 .pulse {
@@ -73,16 +91,8 @@ th, td {
   animation-iteration-count: infinite;
 }
 
-.row-selected > td > a, .row-destination > td > a, .row-entry-point > td > a {
-  color: lightblue;
-}
-
 @keyframes pulse {
   from { transform: scale(1); }
   50% { transform: scale(0.5); }
   to { transform: scale(1); }
-}
-
-.tab-pane {
-  padding-top: 10px;
 }

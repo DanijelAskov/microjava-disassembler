@@ -160,7 +160,11 @@
                         <code>{{disassembledInstruction.toString()}}</code>
                         &nbsp;
                         <fa-icon [icon]="exclamationIcon" class="pulse red-colored" tooltip="{{disassembledInstruction.warning}}"></fa-icon>
-                      </ng-template> 
+                      </ng-template>
+                      <ng-container *ngIf="disassembledInstruction.info">
+                        &nbsp;
+                        <fa-icon [icon]="infoIcon" class="blue-colored" tooltip="{{disassembledInstruction.info}}"></fa-icon>
+                      </ng-container>
                     </td>
                   </tr>
                 </tbody>

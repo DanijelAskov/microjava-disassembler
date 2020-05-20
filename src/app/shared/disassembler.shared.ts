@@ -30,10 +30,11 @@ class DisassembledInstruction {
 
   public referencedAddress: number;
   public warning: string;
+  public info: string;
 
   public bytes: Uint8Array;
 
-  constructor(address: number, instruction: Instruction, operands: string, referencedAddress: number, warning: string, bytes: Uint8Array) {
+  constructor(address: number, instruction: Instruction, operands: string, referencedAddress: number, warning: string, info: string, bytes: Uint8Array) {
     this.address = address;
 
     this.instruction = instruction;
@@ -41,6 +42,7 @@ class DisassembledInstruction {
 
     this.referencedAddress = referencedAddress;
     this.warning = warning;
+    this.info = info;
 
     this.bytes = bytes;
   }
@@ -69,6 +71,7 @@ export class Disassembler {
 
   private jumpDestination: number;
   private warning: string;
+  private info: string;
 
   public static readonly MIN_OBJ_SIZE: number = 1 + 1 + 3 * 4 + 1;
   
@@ -150,7 +153,7 @@ export class Disassembler {
   public static readonly DUP_X1: Instruction = {mnemonic: "dup_x1", opcode: 59};
   public static readonly DUP_X2: Instruction = {mnemonic: "dup_x2", opcode: 60};
 
-  public static readonly INVALID_INSTR: Instruction = {mnemonic: "", opcode: 61};
+  public static readonly INVALID_INSTR: Instruction = {mnemonic: "???", opcode: 61};
 
   public static readonly INSTRUCTIONS: Instruction[] = [
     Disassembler.LOAD, Disassembler.LOAD_0, Disassembler.LOAD_1, Disassembler.LOAD_2,
@@ -201,7 +204,7 @@ export class Disassembler {
     if (this.jumpDestination && (this.jumpDestination < 0 || this.jumpDestination >= this.uint8Array.length - this.headerSize)) {
       this.warning = 'This instruction is problematic! Destination address does not exist.';
     }
-    this.disassembledInstructions.push(new DisassembledInstruction(this.address, instruction, operands, isJumpInstruction ? this.jumpDestination : null, this.warning, bytes));
+    this.disassembledInstructions.push(new DisassembledInstruction(this.address, instruction, operands, isJumpInstruction ? this.jumpDestination : null, this.warning, this.info, bytes));
     this.address = this.current - this.headerSize;
   }
 
@@ -224,6 +227,7 @@ export class Disassembler {
     
     while (this.current < this.uint8Array.length) {
       this.warning = null;
+      this.info = null;
       this.jumpDestination = null;
       this.startAddresses.push(this.address);
       switch(this.opcode = this.get()) {
@@ -327,7 +331,8 @@ export class Disassembler {
           this.operand1 = this.get4();
           let asciiChar = String.fromCharCode(this.operand1);
           let isPrintable = /^[ -~]$/.test(asciiChar);
-          this.put(Disassembler.CONST, new Uint8Array([this.opcode, (this.operand1 >> 24) & 0x0ff, (this.operand1 >> 16) & 0x0ff, (this.operand1 >> 8) & 0x0ff, this.operand1 & 0x0ff]), this.operand1.toString() + (isPrintable ? " (ASCII char: '" + asciiChar + "')" : ""));
+          this.info = isPrintable ? "If it is interpreted as an ASCII char, this value is '" + asciiChar + "'" : "";
+          this.put(Disassembler.CONST, new Uint8Array([this.opcode, (this.operand1 >> 24) & 0x0ff, (this.operand1 >> 16) & 0x0ff, (this.operand1 >> 8) & 0x0ff, this.operand1 & 0x0ff]), this.operand1.toString());
           break;
         }
 				case Disassembler.ADD.opcode: {

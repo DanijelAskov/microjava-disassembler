@@ -20,7 +20,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Disassembler } from '../shared/disassembler.shared';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { faExclamationCircle, faChartBar, faFile } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationCircle, faInfoCircle, faChartBar, faFile } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'bytecode-viewer-component',
@@ -41,6 +41,7 @@ export class BytecodeViewerComponent implements OnInit {
   loading: boolean = false;
 
   exclamationIcon: IconDefinition = faExclamationCircle;
+  infoIcon: IconDefinition = faInfoCircle;
   fileIcon: IconDefinition = faFile;
   barChartIcon: IconDefinition = faChartBar;
 
